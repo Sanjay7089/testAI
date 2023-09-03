@@ -34,6 +34,7 @@ function Console({
   setPreprocessedJobDescription: setPreprocessedJobDescription,
   interviewSettings: interviewSettings,
 }) {
+  //removed voice name of aws polly
   // Joanna, Kendra, Kimberly, Salli, Joey, Matthew, Ruth, Stephen
   const voiceNames = {
     label: "Amazon Polly",
@@ -200,7 +201,7 @@ function Console({
     }
 
     // Recorder holds and processes state for the record requests
-     const recorderInstance = () => {
+    const recorderInstance = () => {
       let currentRecording = null;
 
       function record() {
@@ -209,17 +210,17 @@ function Console({
           return;
         }
         setActivityDetection(1);
-        if(currentRecording != null){
+        if (currentRecording != null) {
           clear();
         }
         currentRecording = collectAudio();
       }
 
       function clear() {
-        if(currentRecording != null){
+        if (currentRecording != null) {
           currentRecording.cancel();
-        currentRecording = null;
-      }
+          currentRecording = null;
+        }
       }
 
       return {

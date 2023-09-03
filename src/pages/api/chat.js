@@ -15,13 +15,48 @@ require("dotenv").config({
   path: "./.env",
 });
 
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
+// app.post("/ask", async (req, res) => {
+//   try {
+//     const {
+//       message,
+//       temperature,
+//       max_tokens,
+//       top_p,
+//       frequency_penalty,
+//       presence_penalty,
+//     } = req.body;
+
+//     const response = await openai.chat.completions.create({
+//       model: "gpt-3.5-turbo",
+//       messages: [
+//         {
+//           role: "system",
+//           content:
+//             "You are a tech hiring manager. You are to only provide feedback on the interview candidate's transcript. If it is not relevant and does not answer the question, make sure to say that. Do not be overly verbose and focus on the candidate's response.",
+//         },
+//         { role: "user", content: message },
+//       ],
+//       temperature: temperature,
+//       max_tokens: max_tokens,
+//       top_p: top_p,
+//       frequency_penalty: frequency_penalty,
+//       presence_penalty: presence_penalty,
+//     });
+
+//     res.status(200).send({
+//       bot: response.choices[0].message.content,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send(error || "Something went wrong");
+//   }
+// });
 export default async function handler(req, res) {
   const sessionResponse = {
     transcription: null,
@@ -30,7 +65,7 @@ export default async function handler(req, res) {
     messages: null,
   };
 
-  //  console.log("Received request with body:", req.body);
+  console.log("Received request with body:", req.body);
 
   sessionResponse.messages = req.body.messages;
 
@@ -40,9 +75,9 @@ export default async function handler(req, res) {
     const buf = Buffer.from(base64, "base64");
     buf.name = "sound.webm";
 
-    const response = await openai.createTranscription(buf, `whisper-1`);
+    const response = await openai.audio.transcriptions.create(buf, `whisper-1`);
     0;
-    //  console.log("Transcription response:", response.data);
+     console.log("Transcription response:", response.data);
 
     sessionResponse.transcription = response.data.text;
     sessionResponse.messages.push({
@@ -52,8 +87,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    openai
-      .createChatCompletion({
+    openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: sessionResponse.messages,
       })

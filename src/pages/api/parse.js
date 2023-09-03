@@ -4,12 +4,12 @@ require("dotenv").config({
   path: "./.env",
 });
 
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 
-const configuration = new Configuration({
+
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
   let messages = [
@@ -22,8 +22,7 @@ export default async function handler(req, res) {
   ];
 
   try {
-    openai
-      .createChatCompletion({
+    openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: messages,
       })
