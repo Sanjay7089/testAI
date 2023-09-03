@@ -1,4 +1,5 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
+import dotenv from "dotenv";
 
 AWS.config.update({
   accessKeyId: process.env.AMAZON_AWS_POLLY_ACCESS_KEY,
@@ -11,16 +12,23 @@ const Polly = new AWS.Polly({
   region: "us-east-1",
 });
 
-require("dotenv").config({
+dotenv.config({
   path: "./.env",
 });
 
-const { Configuration, OpenAIApi } = require("openai");
+// Chat GPT imports
+// const { Configuration, OpenAIApi } = require("openai");
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+// const configuration = new Configuration({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
+// const openai = new OpenAIApi(configuration);
+
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
 });
-const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
   const sessionResponse = {
@@ -32,6 +40,7 @@ export default async function handler(req, res) {
 
   //  console.log("Received request with body:", req.body);
 
+  // Frontend is sending the array of messages
   sessionResponse.messages = req.body.messages;
 
   if (req.body.audio) {
@@ -51,9 +60,20 @@ export default async function handler(req, res) {
     });
   }
 
+  // const response = await openai.chat.completions.create({
+  //   model: "gpt-3.5-turbo",
+  //   messages: [
+  //     {
+  //       role: "system",
+  //       content: `${interviewerPrompt} Limit your responses to 3 sentences. Do not respond with lists or ask multiple questions at once. End every response with a question to keep the conversation going. You are interviewing a candidate for the following position: react Js Developer.`,
+  //     },
+  //     { role: "user", content: message },
+  //   ],
+  // });
+
   try {
-    openai
-      .createChatCompletion({
+    openai.chat.completions
+      .create({
         model: "gpt-3.5-turbo",
         messages: sessionResponse.messages,
       })

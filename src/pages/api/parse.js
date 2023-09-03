@@ -1,15 +1,22 @@
 // This API access point is for parsing the user's job description input and summarizing it
+import dotenv from "dotenv";
 
-require("dotenv").config({
+dotenv.config({
   path: "./.env",
 });
 
-const { Configuration, OpenAIApi } = require("openai");
+// const { Configuration, OpenAIApi } = require("openai");
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+// const configuration = new Configuration({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
+// const openai = new OpenAIApi(configuration);
+
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
 });
-const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
   let messages = [
@@ -22,8 +29,8 @@ export default async function handler(req, res) {
   ];
 
   try {
-    openai
-      .createChatCompletion({
+    openai.chat.completions
+      .create({
         model: "gpt-3.5-turbo",
         messages: messages,
       })
