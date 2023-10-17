@@ -1,6 +1,6 @@
-# Mock-Interviews-with-AI
+# Test AI
 
-Mock-Interviews-with-AI is a voice-to-ai-to-voice application designed using React/Node, offering users an interactive and engaging job interview experience with AI. Practice your interview skills with real-time feedback and dynamic questioning.
+TestAI is a voice-to-ai-to-voice application designed using React/Node, offering users an interactive and engaging job interview experience with AI. Practice your interview skills with real-time feedback and dynamic questioning.
 
 - **Voice Interaction:** Voice chat with an AI interviewer.
 - **Job Description Summarization:** Parses a job description down to essential elements.
